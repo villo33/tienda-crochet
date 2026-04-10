@@ -12,7 +12,6 @@ body{
     background: linear-gradient(135deg,#fff1f5,#ffe4ec);
 }
 
-/* HEADER */
 header{
     background: linear-gradient(135deg,#ff7aa2,#ffb3c6);
     color:white;
@@ -22,7 +21,6 @@ header{
     font-weight:bold;
 }
 
-/* LOGOUT */
 .logout-btn{
     width:auto;
     padding:10px 20px;
@@ -35,7 +33,6 @@ header{
     margin:15px auto;
 }
 
-/* CONTENEDOR */
 .container{
     max-width:500px;
     margin:20px auto;
@@ -45,7 +42,6 @@ header{
     box-shadow:0 10px 25px rgba(0,0,0,0.1);
 }
 
-/* INPUTS */
 input{
     width:100%;
     padding:12px;
@@ -54,7 +50,6 @@ input{
     border:1px solid #ddd;
 }
 
-/* BOTÓN */
 button{
     width:100%;
     padding:12px;
@@ -66,7 +61,6 @@ button{
     cursor:pointer;
 }
 
-/* LISTA PRODUCTOS */
 .lista{
     max-width:900px;
     margin:30px auto;
@@ -87,10 +81,6 @@ button{
     height:180px;
     object-fit:cover;
     border-radius:10px;
-}
-
-.card h4{
-    margin:10px 0 5px;
 }
 
 .actions{
@@ -118,9 +108,7 @@ button{
 
 <body>
 
-<header>
-⚙️ Panel Administrador
-</header>
+<header>⚙️ Panel Administrador</header>
 
 <button onclick="logout()" class="logout-btn">Cerrar sesión</button>
 
@@ -149,7 +137,7 @@ if(localStorage.getItem("ismari") !== "1326"){
 }
 
 function logout(){
-    localStorage.removeItem("admin");
+    localStorage.removeItem("ismari");
     window.location.href="login.html";
 }
 
@@ -181,7 +169,14 @@ function guardar(){
     })
     .then(()=> {
         msg.innerText="✅ Guardado";
-        cargar();
+
+        nombre.value="";
+        precio.value="";
+        cantidad.value="";
+        imagen.value="";
+        preview.style.display="none";
+
+        cargarProductos(); // 🔥 CLAVE
     });
 }
 
@@ -192,7 +187,7 @@ fetch("https://tienda-crochet-dtlk.onrender.com/productos")
 .then(res=>res.json())
 .then(data=>{
 
-    const contenedor = document.getElementById("productos");
+    const contenedor = document.getElementById("lista"); // 🔥 CORREGIDO
     contenedor.innerHTML = "";
 
     data.forEach(p => {
@@ -204,8 +199,10 @@ fetch("https://tienda-crochet-dtlk.onrender.com/productos")
             <p>${p.precio}</p>
             <p>Stock: ${p.cantidad}</p>
 
-            <button onclick="editar(${p.id})">Editar</button>
-            <button onclick="eliminar(${p.id})">Eliminar</button>
+            <div class="actions">
+                <button class="edit" onclick="editar(${p.id})">Editar</button>
+                <button class="delete" onclick="eliminar(${p.id})">Eliminar</button>
+            </div>
         </div>
         `;
     });
@@ -219,9 +216,7 @@ function eliminar(id){
         fetch(`https://tienda-crochet-dtlk.onrender.com/productos/${id}`,{
             method:"DELETE"
         })
-        .then(()=>{
-            cargarProductos(); // 👈 importante
-        });
+        .then(()=>cargarProductos());
     }
 }
 
@@ -240,13 +235,11 @@ function editar(id){
             cantidad:nuevaCantidad
         })
     })
-    .then(()=>{
-        cargarProductos(); // 👈 importante
-    });
+    .then(()=>cargarProductos());
 }
 
 /* INICIAR */
-cargar();
+cargarProductos(); // 🔥 CORRECTO
 
 </script>
 

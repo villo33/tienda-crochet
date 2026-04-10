@@ -203,19 +203,16 @@ header{
 
 <div class="container" id="productos"></div>
 
-<!-- MODAL -->
 <div class="modal" id="modal" onclick="cerrarModal()">
 <img id="imgModal">
 </div>
 
-<!-- BOTÓN WHATSAPP -->
 <a class="whatsapp" href="https://wa.me/573027511479?text=Hola quiero información" target="_blank">💬</a>
 
 <script>
 
 let productosGlobal=[];
 
-/* CARGAR PRODUCTOS */
 fetch("https://tienda-crochet-dtlk.onrender.com/productos")
 .then(res=>res.json())
 .then(data=>{
@@ -224,7 +221,6 @@ fetch("https://tienda-crochet-dtlk.onrender.com/productos")
     document.getElementById("loader").classList.add("hidden");
 });
 
-/* MOSTRAR PRODUCTOS */
 function mostrar(data){
     const contenedor=document.getElementById("productos");
     contenedor.innerHTML="";
@@ -238,7 +234,7 @@ function mostrar(data){
         contenedor.innerHTML+=`
         <div class="card">
             <div class="img-container">
-                <img src=<img src=<img src="https://tienda-crochet-dtlk.onrender.com/uploads/${p.imagen}" onclick="verImagen('${p.imagen}')">
+                <img src="https://tienda-crochet-dtlk.onrender.com/uploads/${p.imagen}" onclick="verImagen('${p.imagen}')">
             </div>
 
             <div class="card-content">
@@ -264,16 +260,14 @@ ${
     });
 }
 
-/* BUSCADOR */
 buscador.addEventListener("input",()=>{
     const v=buscador.value.toLowerCase();
     mostrar(productosGlobal.filter(p=>p.nombre.toLowerCase().includes(v)));
 });
 
-/* MODAL */
 function verImagen(img){
     modal.style.display="flex";
-    imgModal.src="http://localhost:3000/uploads/"+img;
+    imgModal.src="https://tienda-crochet-dtlk.onrender.com/uploads/"+img;
 }
 
 function cerrarModal(){
