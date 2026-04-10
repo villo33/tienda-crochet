@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Admin</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#ff7aa2,#ffb3c6);
+}
+
+/* CARD */
+.login-box{
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    width:300px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+    text-align:center;
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+/* INPUTS */
+input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
+/* BOTÓN */
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#25D366;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.85;
+}
+
+.error{
+    color:red;
+    margin-top:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="login-box">
+<h2>🔐 Admin</h2>
+
+<input id="usuario" placeholder="Usuario">
+<input id="password" type="password" placeholder="Contraseña">
+
+<button onclick="login()">Ingresar</button>
+
+<div class="error" id="error"></div>
+</div>
+
+<script>
+
+function login(){
+
+    const user = document.getElementById("usuario").value;
+    const pass = document.getElementById("password").value;
+
+    // 👇 USUARIO Y CONTRASEÑA
+    if(user === "ismari" && pass === "1326"){
+        localStorage.setItem("ismari","1326");
+        window.location.href = "admin.html";
+    }else{
+        document.getElementById("error").innerText = "❌ Datos incorrectos";
+    }
+}
+
+</script>
+
+</body>
+</html>

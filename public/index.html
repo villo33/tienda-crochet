@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arte Crochet</title>
+
+<style>
+html{scroll-behavior:smooth;}
+
+body{
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#fff1f5,#ffe4ec);
+}
+
+/* NAVBAR */
+.navbar{
+    position:sticky;
+    top:0;
+    background:white;
+    padding:12px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    z-index:100;
+}
+
+.logo{
+    font-weight:bold;
+    color:#ff4d6d;
+    font-size:18px;
+}
+
+/* HERO */
+header{
+    background: linear-gradient(135deg,#ff7aa2,#ffb3c6);
+    color:white;
+    padding:50px 20px;
+    text-align:center;
+}
+
+.search input{
+    width:300px;
+    padding:12px;
+    border:none;
+    border-radius:30px;
+}
+
+/* GRID */
+.container{
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap:30px;
+    padding:30px;
+}
+
+/* CARD */
+.card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 15px 35px rgba(0,0,0,0.1);
+    transition:0.4s;
+}
+
+.card:hover{
+    transform: translateY(-10px);
+}
+
+/* IMG */
+.img-container{
+    height:250px;
+    overflow:hidden;
+}
+
+.img-container img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:0.5s;
+}
+
+.card:hover img{
+    transform:scale(1.1);
+}
+
+/* CONTENIDO */
+.card-content{
+    padding:20px;
+}
+
+.price{
+    color:#ff4d6d;
+    font-weight:bold;
+    font-size:18px;
+}
+
+/* INFO EXTRA */
+.info{
+    font-size:13px;
+    color:#777;
+    margin-top:5px;
+}
+
+/* BOTÓN */
+.btn{
+    display:block;
+    text-align:center;
+    background:#25D366;
+    color:white;
+    padding:12px;
+    border-radius:12px;
+    text-decoration:none;
+    margin-top:10px;
+    font-weight:bold;
+}
+
+/* ACCIONES */
+.actions{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.actions button{
+    flex:1;
+    border:none;
+    padding:10px;
+    border-radius:10px;
+    color:white;
+    cursor:pointer;
+}
+
+.edit{background:#007bff;}
+.delete{background:#ff4d6d;}
+
+/* MODAL */
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.9);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal img{
+    max-width:90%;
+    max-height:90%;
+    border-radius:10px;
+}
+
+/* WHATSAPP FLOAT */
+.whatsapp{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#25D366;
+    color:white;
+    padding:15px;
+    border-radius:50%;
+    font-size:20px;
+    text-decoration:none;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* LOADER */
+.loader{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+    font-size:20px;
+}
+
+.hidden{display:none;}
+</style>
+</head>
+
+<body>
+
+<div class="loader" id="loader">🧶 Cargando tienda...</div>
+
+<div class="navbar">
+<div class="logo">🧶 Arte Crochet Ismari Pérez</div>
+</div>
+
+<header>
+<h1>Hecho a mano con amor 💖</h1>
+<div class="search">
+<input type="text" id="buscador" placeholder="Buscar productos...">
+</div>
+</header>
+
+<div class="container" id="productos"></div>
+
+<!-- MODAL -->
+<div class="modal" id="modal" onclick="cerrarModal()">
+<img id="imgModal">
+</div>
+
+<!-- BOTÓN WHATSAPP -->
+<a class="whatsapp" href="https://wa.me/573027511479?text=Hola quiero información" target="_blank">💬</a>
+
+<script>
+
+let productosGlobal=[];
+
+/* CARGAR PRODUCTOS */
+fetch("http://localhost:3000/productos")
+.then(res=>res.json())
+.then(data=>{
+    productosGlobal=data;
+    mostrar(data);
+    document.getElementById("loader").classList.add("hidden");
+});
+
+/* MOSTRAR PRODUCTOS */
+function mostrar(data){
+    const contenedor=document.getElementById("productos");
+    contenedor.innerHTML="";
+
+    if(data.length===0){
+        contenedor.innerHTML="<h2 style='text-align:center'>No hay productos disponibles</h2>";
+        return;
+    }
+
+    data.forEach(p=>{
+        contenedor.innerHTML+=`
+        <div class="card">
+            <div class="img-container">
+                <img src="http://localhost:3000/uploads/${p.imagen}" onclick="verImagen('${p.imagen}')">
+            </div>
+
+            <div class="card-content">
+                <h3>${p.nombre}</h3>
+                <div class="price">${p.precio}</div>
+
+                <div class="info">
+${
+    p.cantidad > 0 
+    ? `📦 ${p.cantidad} disponibles | 🚚 Entrega rápida`
+    : `❌ Agotado`
+}
+</div>
+
+                <a class="btn" 
+                href="https://wa.me/573146679536?text=Hola quiero el producto: ${p.nombre} con precio ${p.precio}" 
+                target="_blank">
+                    Comprar por WhatsApp
+                </a>
+
+            </div>
+        </div>`;
+    });
+}
+
+/* BUSCADOR */
+buscador.addEventListener("input",()=>{
+    const v=buscador.value.toLowerCase();
+    mostrar(productosGlobal.filter(p=>p.nombre.toLowerCase().includes(v)));
+});
+
+/* MODAL */
+function verImagen(img){
+    modal.style.display="flex";
+    imgModal.src="http://localhost:3000/uploads/"+img;
+}
+
+function cerrarModal(){
+    modal.style.display="none";
+}
+
+/* ELIMINAR */
+function eliminar(id){
+    if(confirm("¿Eliminar producto?")){
+        fetch(`http://localhost:3000/productos/${id}`,{method:"DELETE"})
+        .then(()=>location.reload());
+    }
+}
+
+/* EDITAR */
+function editar(id){
+    const nombre=prompt("Nuevo nombre:");
+    const precio=prompt("Nuevo precio:");
+
+    fetch(`http://localhost:3000/productos/${id}`,{
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({nombre,precio})
+    }).then(()=>location.reload());
+}
+
+</script>
+
+</body>
+</html>

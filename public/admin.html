@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Arte Crochet</title>
+
+<style>
+body{
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#fff1f5,#ffe4ec);
+}
+
+/* HEADER */
+header{
+    background: linear-gradient(135deg,#ff7aa2,#ffb3c6);
+    color:white;
+    padding:25px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* BOTÓN LOGOUT */
+.logout-btn{
+    width:auto;
+    padding:10px 20px;
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    display:block;
+    margin:15px auto;
+    font-weight:bold;
+}
+
+/* CONTENEDOR */
+.container{
+    max-width:500px;
+    margin:40px auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* INPUTS */
+input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:10px;
+    border:1px solid #ddd;
+    font-size:14px;
+}
+
+/* BOTON */
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    background: linear-gradient(135deg,#25D366,#128C7E);
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    opacity:0.85;
+}
+
+/* MENSAJE */
+.mensaje{
+    margin-top:15px;
+    text-align:center;
+    color:#ff4d6d;
+    font-weight:bold;
+}
+
+/* PREVIEW IMAGEN */
+.preview{
+    width:100%;
+    margin-top:10px;
+    border-radius:10px;
+    display:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+⚙️ Panel Administrador
+</header>
+
+<!-- ✅ BOTÓN BIEN UBICADO -->
+<button onclick="logout()" class="logout-btn">
+Cerrar sesión
+</button>
+
+<div class="container">
+<h3>Agregar Producto 🧶</h3>
+
+<input id="nombre" placeholder="Nombre del producto">
+<input id="precio" placeholder="Precio">
+<input id="cantidad" placeholder="Cantidad disponible">
+
+<input type="file" id="imagen" accept="image/*">
+
+<img id="preview" class="preview">
+
+<button onclick="guardar()">Guardar Producto</button>
+
+<div class="mensaje" id="msg"></div>
+</div>
+
+<script>
+
+/* ✅ VALIDACIÓN CORRECTA */
+if(localStorage.getItem("ismari") !== "1326"){
+    window.location.href = "login.html";
+}
+
+/* ✅ LOGOUT */
+function logout(){
+    localStorage.removeItem("admin");
+    window.location.href = "login.html";
+}
+
+/* PREVISUALIZAR IMAGEN */
+document.getElementById("imagen").addEventListener("change", function(){
+    const file = this.files[0];
+
+    if(file){
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+            const preview = document.getElementById("preview");
+            preview.src = e.target.result;
+            preview.style.display = "block";
+        }
+
+        reader.readAsDataURL(file);
+    }
+});
+
+/* GUARDAR PRODUCTO */
+function guardar(){
+
+    const nombre = document.getElementById("nombre").value;
+    const precio = document.getElementById("precio").value;
+    const imagen = document.getElementById("imagen").files[0];
+    const cantidad = document.getElementById("cantidad").value;
+
+    if(!nombre || !precio || !imagen || !cantidad){
+        document.getElementById("msg").innerText = "⚠️ Completa todos los campos";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("nombre", nombre);
+    formData.append("precio", precio);
+    formData.append("imagen", imagen);
+    formData.append("cantidad", cantidad);
+
+    fetch("http://localhost:3000/productos", {
+        method:"POST",
+        body: formData
+    })
+    .then(res=>res.json())
+    .then(()=>{
+        document.getElementById("msg").innerText = "✅ Producto guardado";
+
+        document.getElementById("nombre").value = "";
+        document.getElementById("precio").value = "";
+        document.getElementById("imagen").value = "";
+        document.getElementById("cantidad").value = "";
+    });
+}
+
+</script>
+
+</body>
+</html>
