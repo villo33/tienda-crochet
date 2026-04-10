@@ -175,7 +175,7 @@ function guardar(){
     formData.append("cantidad", cantidad.value);
     formData.append("imagen", imagen.files[0]);
 
-    fetch("http://localhost:3000/productos",{
+    fetch("https://tienda-crochet-dtlk.onrender.com/productos",{
         method:"POST",
         body:formData
     })
