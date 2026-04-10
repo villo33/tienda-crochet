@@ -3,6 +3,7 @@ const cors = require("cors");
 const db = require("./db");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 
@@ -10,11 +11,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-/* ================== CONFIGURAR SUBIDA DE IMÁGENES ================== */
+/* ================== ASEGURAR CARPETA UPLOADS ================== */
+
+const uploadPath = path.join(__dirname, "public/uploads");
+
+if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+}
+
+/* ================== CONFIGURAR MULTER ================== */
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "uploads"); // carpeta donde se guardan
+        cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
@@ -24,47 +33,70 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* HACER PÚBLICA LA CARPETA */
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(uploadPath));
 
 /* ================== PRODUCTOS ================== */
 
-/* LISTAR PRODUCTOS */
+/* LISTAR */
 app.get("/productos", (req, res) => {
     db.query("SELECT * FROM productos", (err, data) => {
-        if(err){
+        if (err) {
             console.log(err);
-            return res.status(500).json({error:"error BD"});
+            return res.status(500).json({ error: "error BD" });
         }
         res.json(data);
     });
 });
 
-/* GUARDAR PRODUCTO CON IMAGEN REAL */
-app.post("/productos", upload.single("imagen"), (req,res)=>{
-    const { nombre, precio, cantidad } = req.body;
-    const imagen = req.file.filename;
+/* GUARDAR */
+app.post("/productos", upload.single("imagen"), (req, res) => {
+    try {
+        const { nombre, precio, cantidad } = req.body;
 
-    db.query(
-        "INSERT INTO productos (nombre, precio, imagen, cantidad) VALUES (?,?,?,?)",
-        [nombre, precio, imagen, cantidad],
-        ()=> res.json({mensaje:"ok"})
-    );
+        if (!req.file) {
+            return res.status(400).json({ error: "Imagen requerida" });
+        }
+
+        const imagen = req.file.filename;
+
+        db.query(
+            "INSERT INTO productos (nombre, precio, imagen, cantidad) VALUES (?,?,?,?)",
+            [nombre, precio, imagen, cantidad],
+            (err) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({ error: "Error al guardar" });
+                }
+                res.json({ mensaje: "ok" });
+            }
+        );
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Error servidor" });
+    }
 });
 
-/* ELIMINAR PRODUCTO */
+/* ELIMINAR */
 app.delete("/productos/:id", (req, res) => {
     const { id } = req.params;
 
-    db.query("DELETE FROM productos WHERE id = ?", [id], (err) => {
-        if(err){
-            console.log(err);
-            return res.status(500).json({error:"error al eliminar"});
+    db.query("SELECT imagen FROM productos WHERE id=?", [id], (err, data) => {
+        if (data && data.length > 0) {
+            const ruta = path.join(uploadPath, data[0].imagen);
+            if (fs.existsSync(ruta)) fs.unlinkSync(ruta);
         }
-        res.json({mensaje:"producto eliminado"});
+
+        db.query("DELETE FROM productos WHERE id=?", [id], (err) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ error: "error al eliminar" });
+            }
+            res.json({ mensaje: "producto eliminado" });
+        });
     });
 });
 
-/* EDITAR PRODUCTO */
+/* EDITAR */
 app.put("/productos/:id", (req, res) => {
     const { id } = req.params;
     const { nombre, precio } = req.body;
@@ -73,17 +105,19 @@ app.put("/productos/:id", (req, res) => {
         "UPDATE productos SET nombre=?, precio=? WHERE id=?",
         [nombre, precio, id],
         (err) => {
-            if(err){
+            if (err) {
                 console.log(err);
-                return res.status(500).json({error:"error al actualizar"});
+                return res.status(500).json({ error: "error al actualizar" });
             }
-            res.json({mensaje:"producto actualizado"});
+            res.json({ mensaje: "producto actualizado" });
         }
     );
 });
 
 /* ================== SERVIDOR ================== */
 
-app.listen(3000, () => {
-    console.log("🚀 Servidor corriendo en http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log("🚀 Servidor corriendo en puerto " + PORT);
 });
