@@ -69,25 +69,20 @@ button{
     gap:20px;
 }
 
-/* CARD */
-.card{
-    background:white;
-    padding:15px;
-    border-radius:15px;
-    box-shadow:0 10px 20px rgba(0,0,0,0.1);
+/* CONTENEDOR DE IMAGEN */
+.img-box{
+    width:100%;
+    height:200px;
+    overflow:hidden;
+    border-radius:10px;
 }
 
 /* IMAGEN */
-.card img{
-    max-width:100%;
-    max-height:180px;
-    object-fit:contain;
-    border-radius:10px;
-    display:block;
-    margin:auto;
-    background:#f5f5f5; /* 🔥 fondo elegante */
+.img-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
-
 .actions{
     display:flex;
     gap:10px;
@@ -199,7 +194,9 @@ fetch("https://tienda-crochet-dtlk.onrender.com/productos")
 
         contenedor.innerHTML += `
         <div class="card">
-            <img src="${p.imagen}">
+            <div class="img-box">
+    <img src="${p.imagen}">
+</div>
             <h4>${p.nombre}</h4>
             <p>${p.precio}</p>
             <p>Stock: ${p.cantidad}</p>
