@@ -6,12 +6,20 @@
 <title>Arte Crochet</title>
 
 <style>
-html{scroll-behavior:smooth;}
 
+/* ===== ANIMACIÓN FONDO ===== */
 body{
     margin:0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg,#fff1f5,#ffe4ec);
+    background: linear-gradient(-45deg,#fff1f5,#ffe4ec,#fff0f5,#ffe8f0);
+    background-size: 400% 400%;
+    animation: fondoAnim 12s ease infinite;
+}
+
+@keyframes fondoAnim{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
 }
 
 /* NAVBAR */
@@ -20,53 +28,46 @@ body{
     top:0;
     background:rgba(255,255,255,0.85);
     backdrop-filter: blur(10px);
-    padding:14px 25px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    box-shadow:0 5px 20px rgba(0,0,0,0.08);
-    z-index:100;
-}
-
-.logo{
+    padding:15px;
+    text-align:center;
     font-weight:bold;
     color:#ff4d6d;
     font-size:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
 }
 
 /* HERO */
 header{
-    background: linear-gradient(135deg,#ff7aa2,#ffb3c6);
-    color:white;
-    padding:70px 20px;
     text-align:center;
+    padding:60px 20px;
+    color:white;
+    background: linear-gradient(135deg,#ff7aa2,#ffb3c6);
 }
 
 header h1{
     margin-bottom:15px;
-    font-size:30px;
 }
 
 .search input{
-    width:320px;
-    padding:14px;
+    width:300px;
+    padding:12px;
     border:none;
     border-radius:30px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
     outline:none;
-    box-shadow:0 8px 20px rgba(0,0,0,0.15);
 }
 
 /* GRID */
 .container{
     display:grid;
     grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-    gap:35px;
-    padding:35px;
+    gap:30px;
+    padding:30px;
 }
 
-/* CARD PRO */
+/* CARD */
 .card{
-    background:rgba(255,255,255,0.85);
+    background:rgba(255,255,255,0.9);
     backdrop-filter: blur(10px);
     border-radius:25px;
     overflow:hidden;
@@ -76,22 +77,35 @@ header h1{
 }
 
 .card:hover{
-    transform: translateY(-10px) scale(1.03);
+    transform: translateY(-10px) scale(1.02);
     box-shadow:0 25px 50px rgba(0,0,0,0.12);
 }
 
-/* IMAGEN CONTENEDOR */
-.img-container{
-    width:100%;
-    height:300px;
-    background: linear-gradient(135deg,#fff0f5,#ffe4ec);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:15px;
+/* BORDE PREMIUM */
+.card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:25px;
+    padding:1px;
+    background: linear-gradient(135deg,#ff7aa2,#ffb3c6);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
 }
 
 /* IMAGEN */
+.img-container{
+    height:300px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(135deg,#fff0f5,#ffe4ec);
+    padding:10px;
+}
+
 .img-container img{
     max-width:100%;
     max-height:100%;
@@ -104,44 +118,42 @@ header h1{
     transform:scale(1.08);
 }
 
+/* BADGE */
+.badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+    padding:5px 10px;
+    border-radius:10px;
+    font-size:12px;
+    color:white;
+    font-weight:bold;
+}
+
 /* CONTENIDO */
 .card-content{
-    padding:22px;
+    padding:20px;
 }
 
-.card-content h3{
-    margin:0;
-    font-size:18px;
-}
-
-/* PRECIO */
 .price{
-    margin-top:8px;
     color:#ff4d6d;
-    font-weight:bold;
     font-size:22px;
-}
-
-/* INFO */
-.info{
-    font-size:13px;
-    color:#666;
-    margin-top:6px;
+    font-weight:bold;
+    margin-top:5px;
 }
 
 /* BOTÓN */
 .btn{
     display:block;
     text-align:center;
+    margin-top:12px;
+    padding:12px;
+    border-radius:12px;
     background: linear-gradient(135deg,#25D366,#128C7E);
     color:white;
-    padding:13px;
-    border-radius:14px;
     text-decoration:none;
-    margin-top:15px;
     font-weight:bold;
     transition:0.3s;
-    box-shadow:0 5px 15px rgba(0,0,0,0.15);
 }
 
 .btn:hover{
@@ -151,8 +163,6 @@ header h1{
 /* MODAL */
 .modal{
     position:fixed;
-    top:0;
-    left:0;
     width:100%;
     height:100%;
     background:rgba(0,0,0,0.9);
@@ -164,21 +174,6 @@ header h1{
 .modal img{
     max-width:90%;
     max-height:90%;
-    border-radius:10px;
-}
-
-/* WHATSAPP */
-.whatsapp{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    background:#25D366;
-    color:white;
-    padding:16px;
-    border-radius:50%;
-    font-size:20px;
-    text-decoration:none;
-    box-shadow:0 5px 20px rgba(0,0,0,0.3);
 }
 
 /* LOADER */
@@ -191,10 +186,23 @@ header h1{
     justify-content:center;
     align-items:center;
     z-index:999;
+}
+
+/* WHATSAPP */
+.whatsapp{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#25D366;
+    color:white;
+    padding:15px;
+    border-radius:50%;
+    text-decoration:none;
     font-size:20px;
 }
 
 .hidden{display:none;}
+
 </style>
 </head>
 
@@ -202,9 +210,7 @@ header h1{
 
 <div class="loader" id="loader">🧶 Cargando tienda...</div>
 
-<div class="navbar">
-<div class="logo">🧶 Arte Crochet Ismari Pérez</div>
-</div>
+<div class="navbar">🧶 Arte Crochet Ismari Pérez</div>
 
 <header>
 <h1>Hecho a mano con amor 💖</h1>
@@ -219,7 +225,7 @@ header h1{
 <img id="imgModal">
 </div>
 
-<a class="whatsapp" href="https://wa.me/573027511479?text=Hola quiero información" target="_blank">💬</a>
+<a class="whatsapp" href="https://wa.me/573027511479" target="_blank">💬</a>
 
 <script>
 
@@ -230,7 +236,7 @@ fetch("https://tienda-crochet-dtlk.onrender.com/productos")
 .then(data=>{
     productosGlobal=data;
     mostrar(data);
-    document.getElementById("loader").classList.add("hidden");
+    loader.classList.add("hidden");
 });
 
 function mostrar(data){
@@ -238,31 +244,33 @@ function mostrar(data){
     contenedor.innerHTML="";
 
     data.forEach(p=>{
+
+        const mensaje = encodeURIComponent(
+        `Hola, me gustó el producto "${p.nombre}" que cuesta $${p.precio}. ¿Me puedes dar más información?`
+        );
+
         contenedor.innerHTML+=`
         <div class="card">
+
             <div class="img-container">
-            <img src="${p.imagen}" onclick="verImagen('${p.imagen}')">
+                <img src="${p.imagen}" onclick="verImagen('${p.imagen}')">
+
+                <div class="badge" style="background:${p.cantidad > 0 ? '#25D366' : '#ff4d6d'}">
+                    ${p.cantidad > 0 ? 'Disponible' : 'Agotado'}
+                </div>
             </div>
 
             <div class="card-content">
                 <h3>${p.nombre}</h3>
                 <div class="price">$${p.precio}</div>
 
-                <div class="info">
-                ${
-                    p.cantidad > 0 
-                    ? `📦 ${p.cantidad} disponibles`
-                    : `❌ Agotado`
-                }
-                </div>
-
                 <a class="btn" 
-                href="https://wa.me/573146679536?text=Hola quiero el producto: ${p.nombre} con precio ${p.precio}" 
+                href="https://wa.me/573146679536?text=${mensaje}" 
                 target="_blank">
-                    Comprar por WhatsApp
+                🛍️ Comprar ahora
                 </a>
-
             </div>
+
         </div>`;
     });
 }
