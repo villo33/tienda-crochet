@@ -234,7 +234,7 @@ function mostrar(data){
         contenedor.innerHTML+=`
         <div class="card">
             <div class="img-container">
-            <img src="${p.imagen.replace('/upload/', '/upload/f_auto,q_auto/')}" onclick="verImagen('${p.imagen}')">
+            <img src=<img src="${p.imagen}" onclick="verImagen('${p.imagen}')">
             </div>
 
             <div class="card-content">
@@ -277,7 +277,7 @@ function cerrarModal(){
 /* ELIMINAR */
 function eliminar(id){
     if(confirm("¿Eliminar producto?")){
-        fetch(`http://localhost:3000/productos/${id}`,{method:"DELETE"})
+        fetch(`https://tienda-crochet-dtlk.onrender.com/productos/${id}`,{method:"DELETE"})
         .then(()=>location.reload());
     }
 }
