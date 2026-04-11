@@ -7,13 +7,13 @@
 
 <style>
 
-/* ===== ANIMACIÓN FONDO ===== */
+/* ===== FONDO ANIMADO SUAVE ===== */
 body{
     margin:0;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(-45deg,#fff1f5,#ffe4ec,#fff0f5,#ffe8f0);
     background-size: 400% 400%;
-    animation: fondoAnim 12s ease infinite;
+    animation: fondoAnim 15s ease infinite;
 }
 
 @keyframes fondoAnim{
@@ -22,11 +22,11 @@ body{
     100%{background-position:0% 50%;}
 }
 
-/* NAVBAR */
+/* ===== NAVBAR ===== */
 .navbar{
     position:sticky;
     top:0;
-    background:rgba(255,255,255,0.85);
+    background:rgba(255,255,255,0.9);
     backdrop-filter: blur(10px);
     padding:15px;
     text-align:center;
@@ -36,7 +36,7 @@ body{
     box-shadow:0 5px 20px rgba(0,0,0,0.08);
 }
 
-/* HERO */
+/* ===== HERO ===== */
 header{
     text-align:center;
     padding:60px 20px;
@@ -46,63 +46,55 @@ header{
 
 header h1{
     margin-bottom:15px;
+    font-size:28px;
 }
 
+/* ===== BUSCADOR ===== */
 .search input{
     width:300px;
+    max-width:90%;
     padding:12px;
     border:none;
     border-radius:30px;
-    box-shadow:0 5px 15px rgba(0,0,0,0.2);
     outline:none;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
-/* GRID */
+/* ===== GRID ===== */
 .container{
     display:grid;
-    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    grid-template-columns: repeat(auto-fit,minmax(270px,1fr));
     gap:30px;
     padding:30px;
 }
 
-/* CARD */
+/* ===== CARD ===== */
 .card{
-    background:rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
-    border-radius:25px;
+    background:white;
+    border-radius:20px;
     overflow:hidden;
-    box-shadow:0 15px 40px rgba(0,0,0,0.08);
+    box-shadow:0 15px 35px rgba(0,0,0,0.08);
     transition:0.4s;
-    position:relative;
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
 }
 
 .card:hover{
-    transform: translateY(-10px) scale(1.02);
-    box-shadow:0 25px 50px rgba(0,0,0,0.12);
+    transform: translateY(-8px);
 }
 
-/* BORDE PREMIUM */
-.card::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    border-radius:25px;
-    padding:1px;
-    background: linear-gradient(135deg,#ff7aa2,#ffb3c6);
-    -webkit-mask:
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
-}
-
-/* IMAGEN */
+/* ===== IMAGEN ===== */
 .img-container{
-    height:300px;
+    width:100%;
+    height:260px;
+    background: linear-gradient(135deg,#fff0f5,#ffe4ec);
     display:flex;
     align-items:center;
     justify-content:center;
-    background: linear-gradient(135deg,#fff0f5,#ffe4ec);
     padding:10px;
 }
 
@@ -111,30 +103,22 @@ header h1{
     max-height:100%;
     object-fit:contain;
     transition:0.4s;
-    border-radius:15px;
 }
 
 .card:hover img{
-    transform:scale(1.08);
+    transform:scale(1.05);
 }
 
-/* BADGE */
-.badge{
-    position:absolute;
-    top:10px;
-    right:10px;
-    padding:5px 10px;
-    border-radius:10px;
-    font-size:12px;
-    color:white;
-    font-weight:bold;
-}
-
-/* CONTENIDO */
+/* ===== CONTENIDO ===== */
 .card-content{
     padding:20px;
 }
 
+.card-content h3{
+    margin:0;
+}
+
+/* ===== PRECIO ===== */
 .price{
     color:#ff4d6d;
     font-size:22px;
@@ -142,7 +126,14 @@ header h1{
     margin-top:5px;
 }
 
-/* BOTÓN */
+/* ===== STOCK ===== */
+.stock{
+    font-size:13px;
+    color:#777;
+    margin-top:5px;
+}
+
+/* ===== BOTÓN ===== */
 .btn{
     display:block;
     text-align:center;
@@ -160,7 +151,7 @@ header h1{
     transform:scale(1.05);
 }
 
-/* MODAL */
+/* ===== MODAL ===== */
 .modal{
     position:fixed;
     width:100%;
@@ -174,9 +165,24 @@ header h1{
 .modal img{
     max-width:90%;
     max-height:90%;
+    border-radius:10px;
 }
 
-/* LOADER */
+/* ===== WHATSAPP ===== */
+.whatsapp{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#25D366;
+    color:white;
+    padding:15px;
+    border-radius:50%;
+    font-size:20px;
+    text-decoration:none;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* ===== LOADER ===== */
 .loader{
     position:fixed;
     width:100%;
@@ -186,18 +192,6 @@ header h1{
     justify-content:center;
     align-items:center;
     z-index:999;
-}
-
-/* WHATSAPP */
-.whatsapp{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    background:#25D366;
-    color:white;
-    padding:15px;
-    border-radius:50%;
-    text-decoration:none;
     font-size:20px;
 }
 
@@ -239,14 +233,25 @@ fetch("https://tienda-crochet-dtlk.onrender.com/productos")
     loader.classList.add("hidden");
 });
 
+/* ===== MOSTRAR PRODUCTOS ===== */
 function mostrar(data){
     const contenedor=document.getElementById("productos");
     contenedor.innerHTML="";
 
+    if(data.length===0){
+        contenedor.innerHTML="<h2 style='text-align:center'>No hay productos</h2>";
+        return;
+    }
+
     data.forEach(p=>{
 
         const mensaje = encodeURIComponent(
-        `Hola, me gustó el producto "${p.nombre}" que cuesta $${p.precio}. ¿Me puedes dar más información?`
+`Hola 👋, me gustó este producto:
+
+🧶 ${p.nombre}
+💰 Precio: $${p.precio}
+
+¿Me puedes dar más información?`
         );
 
         contenedor.innerHTML+=`
@@ -254,32 +259,38 @@ function mostrar(data){
 
             <div class="img-container">
                 <img src="${p.imagen}" onclick="verImagen('${p.imagen}')">
-
-                <div class="badge" style="background:${p.cantidad > 0 ? '#25D366' : '#ff4d6d'}">
-                    ${p.cantidad > 0 ? 'Disponible' : 'Agotado'}
-                </div>
             </div>
 
             <div class="card-content">
                 <h3>${p.nombre}</h3>
                 <div class="price">$${p.precio}</div>
 
+                <div class="stock">
+                    ${p.cantidad > 0 
+                        ? `📦 ${p.cantidad} disponibles`
+                        : `❌ Agotado`
+                    }
+                </div>
+
                 <a class="btn" 
                 href="https://wa.me/573146679536?text=${mensaje}" 
                 target="_blank">
-                🛍️ Comprar ahora
+                💬 Consultar por WhatsApp
                 </a>
+
             </div>
 
         </div>`;
     });
 }
 
+/* ===== BUSCADOR ===== */
 buscador.addEventListener("input",()=>{
     const v=buscador.value.toLowerCase();
     mostrar(productosGlobal.filter(p=>p.nombre.toLowerCase().includes(v)));
 });
 
+/* ===== MODAL ===== */
 function verImagen(img){
     modal.style.display="flex";
     imgModal.src=img;
