@@ -14,9 +14,9 @@ app.use(express.static("public"));
 /* ================== CONFIGURAR CLOUDINARY ================== */
 
 cloudinary.config({
-    cloud_name: "Untitled",
-    api_key: "922379677878479",
-    api_secret: "cbqhx1YWOSOsTReVGjuE9lyoUFw"
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 /* ================== CONFIGURAR MULTER (MEMORIA) ================== */
