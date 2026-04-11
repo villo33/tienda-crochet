@@ -234,7 +234,7 @@ function mostrar(data){
         contenedor.innerHTML+=`
         <div class="card">
             <div class="img-container">
-                <img src="https://tienda-crochet-dtlk.onrender.com/uploads/${p.imagen}" onclick="verImagen('${p.imagen}')">
+            <img src="${p.imagen}" onclick="verImagen('${p.imagen}')">
             </div>
 
             <div class="card-content">
@@ -267,7 +267,7 @@ buscador.addEventListener("input",()=>{
 
 function verImagen(img){
     modal.style.display="flex";
-    imgModal.src="https://tienda-crochet-dtlk.onrender.com/uploads/"+img;
+    imgModal.src=imgModal.src = img;
 }
 
 function cerrarModal(){

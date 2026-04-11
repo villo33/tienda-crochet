@@ -1,9 +1,9 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const db = require("./db");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 
 const app = express();
 
@@ -11,29 +11,18 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-/* ================== ASEGURAR CARPETA UPLOADS ================== */
+/* ================== CONFIGURAR CLOUDINARY ================== */
 
-const uploadPath = path.join(__dirname, "public/uploads");
-
-if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, { recursive: true });
-}
-
-/* ================== CONFIGURAR MULTER ================== */
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadPath);
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
+cloudinary.config({
+    cloud_name: "Untitled",
+    api_key: "922379677878479",
+    api_secret: "cbqhx1YWOSOsTReVGjuE9lyoUFw"
 });
 
-const upload = multer({ storage });
+/* ================== CONFIGURAR MULTER (MEMORIA) ================== */
 
-/* HACER PÚBLICA LA CARPETA */
-app.use("/uploads", express.static(uploadPath));
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 /* ================== PRODUCTOS ================== */
 
@@ -48,8 +37,8 @@ app.get("/productos", (req, res) => {
     });
 });
 
-/* GUARDAR */
-app.post("/productos", upload.single("imagen"), (req, res) => {
+/* GUARDAR CON CLOUDINARY */
+app.post("/productos", upload.single("imagen"), async (req, res) => {
     try {
         const { nombre, precio, cantidad } = req.body;
 
@@ -57,42 +46,49 @@ app.post("/productos", upload.single("imagen"), (req, res) => {
             return res.status(400).json({ error: "Imagen requerida" });
         }
 
-        const imagen = req.file.filename;
-
-        db.query(
-            "INSERT INTO productos (nombre, precio, imagen, cantidad) VALUES (?,?,?,?)",
-            [nombre, precio, imagen, cantidad],
-            (err) => {
-                if (err) {
-                    console.log(err);
-                    return res.status(500).json({ error: "Error al guardar" });
+        // Subir a Cloudinary
+        const resultado = await cloudinary.uploader.upload_stream(
+            { folder: "tienda_crochet" },
+            async (error, result) => {
+                if (error) {
+                    console.log(error);
+                    return res.status(500).json({ error: "Error subiendo imagen" });
                 }
-                res.json({ mensaje: "ok" });
+
+                const imagen = result.secure_url;
+
+                db.query(
+                    "INSERT INTO productos (nombre, precio, imagen, cantidad) VALUES (?,?,?,?)",
+                    [nombre, precio, imagen, cantidad],
+                    (err) => {
+                        if (err) {
+                            console.log(err);
+                            return res.status(500).json({ error: "Error al guardar" });
+                        }
+                        res.json({ mensaje: "ok" });
+                    }
+                );
             }
         );
+
+        resultado.end(req.file.buffer);
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Error servidor" });
     }
 });
 
-/* ELIMINAR */
+/* ELIMINAR (SOLO BD, NO CLOUDINARY POR AHORA) */
 app.delete("/productos/:id", (req, res) => {
     const { id } = req.params;
 
-    db.query("SELECT imagen FROM productos WHERE id=?", [id], (err, data) => {
-        if (data && data.length > 0) {
-            const ruta = path.join(uploadPath, data[0].imagen);
-            if (fs.existsSync(ruta)) fs.unlinkSync(ruta);
+    db.query("DELETE FROM productos WHERE id=?", [id], (err) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: "error al eliminar" });
         }
-
-        db.query("DELETE FROM productos WHERE id=?", [id], (err) => {
-            if (err) {
-                console.log(err);
-                return res.status(500).json({ error: "error al eliminar" });
-            }
-            res.json({ mensaje: "producto eliminado" });
-        });
+        res.json({ mensaje: "producto eliminado" });
     });
 });
 
