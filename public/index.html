@@ -234,7 +234,7 @@ function mostrar(data){
         contenedor.innerHTML+=`
         <div class="card">
             <div class="img-container">
-            <img src=<img src="${p.imagen}" onclick="verImagen('${p.imagen}')">
+             <img src="${p.imagen}" onclick="verImagen('${p.imagen}')">
             </div>
 
             <div class="card-content">
@@ -287,7 +287,7 @@ function editar(id){
     const nombre=prompt("Nuevo nombre:");
     const precio=prompt("Nuevo precio:");
 
-    fetch(`http://localhost:3000/productos/${id}`,{
+    fetch(`https://tienda-crochet-dtlk.onrender.com/productos/${id}`,{
         method:"PUT",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({nombre,precio})
